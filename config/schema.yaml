@@ -1,0 +1,247 @@
+# api/config/schema.yaml
+# https://schema.org/docs/full.html
+# https://api-platform.com/docs/schema-generator/configuration
+# The list of types and properties we want to use
+header: |
+    /*
+     * This file is part of the TangoMan package.
+     *
+     * (c) "Matthias Morin" <mat@tangoman.io>
+     *
+     * For the full copyright and license information, please view the LICENSE
+     * file that was distributed with this source code.
+     */
+
+author: '"Matthias Morin" <mat@tangoman.io>'
+
+debug: true
+
+doctrine:
+    useCollection: true
+
+validator:
+    assertType: true
+
+id:
+    generate: false
+
+types:
+    # --- Character Entity ---
+    # https://rickandmortyapi.com/documentation/#character
+    Character:
+        attributes:
+            ApiResource:
+                shortName: "Character"
+                description: "A character entity from the Rick and Morty universe."
+        operations:
+            Get: ~
+            getCollection: ~
+        guessFrom: "Person"
+        properties:
+            id:
+                attributes:
+                    ApiProperty: { description: "Unique Rick and Morty API identifier for the character." }
+                    Assert\Type: { type: "int"}
+                    ORM\Column: { type: "integer", unique: true }
+                range: "Integer"
+                nullable: false
+
+            name:
+                attributes:
+                    ApiProperty: { description: "The name of the character." }
+                    ORM\Column: { type: "text", unique: true }
+                range: "Text"
+                nullable: false
+
+            status:
+                attributes:
+                    ApiProperty: { description: "The status of the character ('Alive', 'Dead' or 'unknown')." }
+                    Assert\Type: { type: "string" }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: true
+
+            species:
+                attributes:
+                    ApiProperty: { description: "The species of the character." }
+                    Assert\Type: { type: "string" }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: true
+
+            type:
+                attributes:
+                    ApiProperty: { description: "The type or subspecies of the character." }
+                    Assert\Type: { type: "string" }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: true
+
+            gender:
+                attributes:
+                    ApiProperty: { description: "The gender of the character ('Female', 'Male', 'Genderless' or 'unknown')." }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: true
+
+            origin:
+                attributes:
+                    ApiProperty: { description: "Name and link to the character's origin location." }
+                range: "Location" # References the Location entity
+                nullable: true
+
+            location:
+                attributes:
+                    ApiProperty: { description: "Name and link to the character's last known location endpoint." }
+                range: "Location" # References the Location entity
+                nullable: true
+
+            image:
+                attributes:
+                    ApiProperty: { description: "Link to the character's image. All images are 300x300px and most are medium shots or portraits since they are intended to be used as avatars." }
+                range: "URL" # Link to the character's image
+                unique: true
+                nullable: true
+
+            episode:
+                attributes:
+                    ApiProperty: { description: "List of episodes in which the character appeared." }
+                range: "Episode" # References the Episode entity
+                cardinality: '(1..*)' # Array of string URLs
+                nullable: true
+
+            url:
+                attributes:
+                    ApiProperty: { description: "Link to the character's own URL endpoint." }
+                range: "URL"
+                unique: true
+                nullable: true
+
+            created:
+                attributes:
+                    ApiProperty: { description: "The timestamp when the resource was created as a ISO 8601 timestamp (e.g., yyyy-MM-ddTHH:mm:ss.SSSZ).'" }
+                range: "DateTime"
+                nullable: true
+
+    # --- Episode Entity ---
+    # https://rickandmortyapi.com/documentation/#episode
+    Episode:
+        attributes:
+            ApiResource:
+                description: "Define Episode as an API Resource"
+        operations:
+            Get: ~
+            getCollection: ~
+        guessFrom: "CreativeWork"
+        properties:
+            id:
+                attributes:
+                    ApiProperty: { description: "Unique Rick and Morty API identifier for the episode." }
+                    Assert\Type: { type: "int"}
+                    ORM\Column: { type: "integer", unique: true }
+                range: "Integer"
+                nullable: false
+
+            name:
+                attributes:
+                    ApiProperty: { description: "The name of the episode." }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: false
+
+            air_date:
+                attributes:
+                    ApiProperty: { description: "The air date of the episode as a Long Date Format (e.g., MMMM d, yyyy)" }
+                    Assert\Type: { type: "string" }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: true
+
+            episode:
+                attributes:
+                    ApiProperty: { description: "The code of the episode. (e.g., \"S01E01\")." }
+                    Assert\Type: { type: "string" }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: true
+
+            characters:
+                attributes:
+                    ApiProperty: { description: "List of characters who have been seen in the episode." }
+                range: "Character" # References the Character entity
+                cardinality: '(1..*)' # Array of string URLs
+                nullable: true
+
+            url:
+                attributes:
+                    ApiProperty: { description: "Link to the episode's own endpoint." }
+                range: "URL"
+                nullable: true
+
+            created:
+                attributes:
+                    ApiProperty: { description: "The timestamp when the resource was created as a ISO 8601 timestamp (e.g., yyyy-MM-ddTHH:mm:ss.SSSZ).'" }
+                range: "DateTime"
+                nullable: true
+
+    # --- Location Entity ---
+    # https://rickandmortyapi.com/documentation/#location
+    Location:
+        attributes:
+            ApiResource:
+                shortName: "Location"
+                description: "Define Location as an API Resource"
+        operations:
+            Get: ~
+            getCollection: ~
+        guessFrom: Thing
+        properties:
+            id:
+                attributes:
+                    ApiProperty: { description: "Unique Rick and Morty API identifier for the location." }
+                    Assert\Type: { type: "int"}
+                    ORM\Column: { type: "integer", unique: true }
+                range: "Integer"
+                nullable: false
+
+            name:
+                attributes:
+                    ApiProperty: { description: "The name of the location." }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: false
+
+            type:
+                attributes:
+                    ApiProperty: { description: "The type of the location (e.g., Planet, Cluster)." }
+                    Assert\Type: { type: "string" }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: true
+
+            dimension:
+                attributes:
+                    ApiProperty: { description: "The dimension in which the location is located." }
+                    Assert\Type: { type: "string" }
+                    ORM\Column: { type: "text" }
+                range: "Text"
+                nullable: true
+
+            residents:
+                attributes:
+                    ApiProperty: { description: "List of character who have been last seen in the location." }
+                range: "Character" # References the Character entity
+                cardinality: '(1..*)' # Array of string URLs
+                nullable: true
+
+            url:
+                attributes:
+                    ApiProperty: { description: "Link to the location's own endpoint." }
+                range: "URL"
+                nullable: true
+
+            created:
+                attributes:
+                    ApiProperty: { description: "The timestamp when the resource was created as a ISO 8601 timestamp (e.g., yyyy-MM-ddTHH:mm:ss.SSSZ).'" }
+                range: "DateTime"
+                nullable: true

@@ -1,0 +1,30 @@
+# https://api-platform.com/docs/core/configuration/
+api_platform:
+    show_webby: false
+    title: tangoman75/rick-and-morty
+    version: 1.0.0
+    description: |
+      The Rick and Morty API Redesign with PHP, Symfony and API-Platform
+
+    enable_entrypoint: false
+
+    eager_loading:
+        enabled: false
+
+    defaults:
+        pagination_items_per_page: 20
+        stateless: true
+        cache_headers:
+            vary: ['Content-Type', 'Authorization', 'Origin']
+
+    mapping:
+        paths: ['%kernel.project_dir%/src/Entity']
+
+    # The list of enabled formats. The first one will be the default.
+    formats:
+        json:   ['application/json']
+        jsonld: ['application/ld+json']
+
+    patch_formats:
+        json: ['application/merge-patch+json']
+        jsonapi: ['application/vnd.api+json']
